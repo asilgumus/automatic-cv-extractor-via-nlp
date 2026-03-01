@@ -57,6 +57,7 @@ const SECTION_PATTERNS = {
   experience: /^(experience|work\s+experience|employment|professional\s+experience|career|work\s+history|positions?)\s*:?\s*$/i,
   education: /^(education|academic|qualifications?|degrees?|schooling|academic\s+background)\s*:?\s*$/i,
   skills: /^(skills?|technical\s+skills?|core\s+competencies|competencies|expertise|technologies|tools)\s*:?\s*$/i,
+  soft_skills: /^(soft\s+skills?|interpersonal\s+skills?|personal\s+attributes?)\s*:?\s*$/i,
   projects: /^(projects?|personal\s+projects?|side\s+projects?|portfolio)\s*:?\s*$/i,
   certifications: /^(certifications?|certificates?|licenses?|credentials?|accreditations?)\s*:?\s*$/i,
   awards: /^(awards?|honors?|honours?|achievements?|recognition)\s*:?\s*$/i,
@@ -110,7 +111,8 @@ function extractCV(rawText) {
   const summary = (sections.summary || []).join(" ").trim();
   const experience = parseExperience(sections.experience || [], nlpReady);
   const education = parseEducation(sections.education || []);
-  const skills = extractSkillsNLP(rawText, sections.skills || [], nlpReady);
+  const skillLines = [...(sections.skills || []), ...(sections.soft_skills || [])];
+  const skills = extractSkillsNLP(rawText, sections.skills || [], sections.soft_skills || [], nlpReady);
   const projects = parseListSection(sections.projects || []);
   const certifications = parseListSection(sections.certifications || []);
   const languages = extractLanguages(rawText, sections.languages || []);
@@ -204,12 +206,29 @@ function extractContact(rawText, nlpReady) {
   return contact;
 }
 
-function extractSkillsNLP(rawText, skillSectionLines, nlpReady) {
+function extractSkillsNLP(rawText, skillSectionLines, softSectionLines, nlpReady) {
   const scores = new Map();
 
+  const softLower = new Set(SOFT_SKILLS_LIST.map(s => s.toLowerCase()));
+  const langLower = new Set(KNOWN_LANGUAGES.map(l => l.toLowerCase()));
+
+  const isValidSkill = (term) => {
+    const t = term.trim();
+    if (t.length < 2 || t.length > 50) return false;
+    if (/[.,!?;]$/.test(t)) return false;
+    if (/ (and|or|to|with|for|of|in|by|from|the|a|an) /i.test(t)) return false;
+    if (/ (and|or|to|with)$/i.test(t)) return false;
+    if (/^(and|or|to|with|for|the|a|an) /i.test(t)) return false;
+    if (t.split(' ').length > 4) return false;
+    if (STOP_WORDS.has(t.toLowerCase())) return false;
+    if (softLower.has(t.toLowerCase())) return false;
+    if (langLower.has(t.toLowerCase())) return false;
+    return true;
+  };
+
   const add = (term, score) => {
-    const key = term.trim();
-    if (!key || key.length < 2 || key.length > 50) return;
+    const key = term.trim().replace(/[.,!?;]+$/, '');
+    if (!isValidSkill(key)) return;
     scores.set(key, (scores.get(key) || 0) + score);
   };
 
@@ -276,8 +295,13 @@ function extractSkillsNLP(rawText, skillSectionLines, nlpReady) {
   }
 
   const soft = [];
+  const softSearchText = rawText + " " + (softSectionLines || []).join(" ");
+  const softSeen = new Set();
   SOFT_SKILLS_LIST.forEach(skill => {
-    if (new RegExp(`\\b${skill}\\b`, "i").test(rawText)) soft.push(toTitleCase(skill));
+    if (new RegExp(`\\b${skill}\\b`, "i").test(softSearchText)) {
+      const tc = toTitleCase(skill);
+      if (!softSeen.has(tc.toLowerCase())) { softSeen.add(tc.toLowerCase()); soft.push(tc); }
+    }
   });
 
   return { technical, soft };
