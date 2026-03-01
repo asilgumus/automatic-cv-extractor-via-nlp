@@ -1,5 +1,7 @@
 const PDFJS_CDN = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
 const PDFJS_WORKER = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+const API_ENDPOINT = "/api/extract";
+const API_TIMEOUT_MS = 25000;
 
 let pdfjsReady = false;
 
@@ -26,8 +28,7 @@ async function readPDF(file) {
     for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const content = await page.getTextContent();
-        const pageText = content.items.map(item => item.str).join(" ");
-        fullText += pageText + "\n";
+        fullText += content.items.map(item => item.str).join(" ") + "\n";
     }
     return fullText;
 }
@@ -41,9 +42,52 @@ async function readText(file) {
     });
 }
 
+async function callExtractAPI(text) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+    try {
+        const resp = await fetch(API_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text }),
+            signal: controller.signal,
+        });
+        clearTimeout(timer);
+        if (!resp.ok) return null;
+        return await resp.json();
+    } catch (e) {
+        clearTimeout(timer);
+        return null;
+    }
+}
+
+function mergeAPIResult(data, apiResult) {
+    if (!apiResult) return;
+
+    if (apiResult.name && !data.name) data.name = apiResult.name;
+
+    if (apiResult.location && !data.contact.location) {
+        data.contact.location = apiResult.location;
+    }
+
+    if (Array.isArray(apiResult.skills) && apiResult.skills.length > 0) {
+        const existing = new Set(data.skills.technical.map(s => s.toLowerCase()));
+        for (const skill of apiResult.skills) {
+            if (!existing.has(skill.toLowerCase())) {
+                data.skills.technical.unshift(skill);
+                existing.add(skill.toLowerCase());
+            }
+        }
+    }
+
+    if (Array.isArray(apiResult.organizations) && apiResult.organizations.length > 0) {
+        data._organizations = apiResult.organizations;
+    }
+}
+
 async function processFile(file, onProgress) {
-    let rawText = "";
     const ext = file.name.split(".").pop().toLowerCase();
+    let rawText = "";
 
     onProgress("Reading file…");
     if (ext === "pdf") {
@@ -53,14 +97,22 @@ async function processFile(file, onProgress) {
     }
 
     onProgress("Extracting sections…");
-    await delay(400);
+    await delay(300);
 
     const data = CVExtractor.extractCV(rawText);
     data._rawText = rawText;
     data._fileName = file.name;
 
+    onProgress("Running NLP analysis…");
+    const apiResult = await callExtractAPI(rawText);
+    mergeAPIResult(data, apiResult);
+
+    if (!apiResult) {
+        console.info("API unavailable — using client-side NLP.");
+    }
+
     onProgress("Organising results…");
-    await delay(300);
+    await delay(200);
 
     sessionStorage.setItem("cvData", JSON.stringify(data));
     window.location.href = "result.html";
