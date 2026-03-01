@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parsed — Upload Your Resume</title>
+  <meta name="description" content="Upload your CV or resume and instantly see a clean breakdown of your experience, education, and skills." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="logo">Parsed</a>
+    <nav>
+      <a href="#how" class="nav-link">How it works</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-eyebrow">Free &amp; Private — Runs in your browser</div>
+    <h1>Your resume,<br>clearly read.</h1>
+    <p class="hero-sub">
+      Upload any CV or resume in PDF or text format. We'll pull out the
+      important parts — experience, education, skills — so you can see
+      exactly what's on paper.
+    </p>
+  </section>
+
+  <section class="upload-section">
+    <div class="upload-zone" id="drop-zone">
+      <input type="file" id="file-input" accept=".pdf,.txt,.text" />
+      <div class="upload-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+      </div>
+      <h2>Drop your CV here</h2>
+      <p>Drag and drop, or click to browse your files</p>
+      <div class="btn-upload">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Choose File
+      </div>
+      <div class="upload-formats">Supports PDF and plain text files</div>
+    </div>
+  </section>
+
+  <section class="features" id="how">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <h3>Upload</h3>
+      <p>Drop your PDF or text resume. Nothing is sent to any server — everything stays on your device.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </div>
+      <h3>Parse</h3>
+      <p>We read through the document and pick out sections: work history, education, contact details.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+      </div>
+      <h3>Skills</h3>
+      <p>Over 500 technical and soft skills are matched against your resume text automatically.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+      </div>
+      <h3>Review</h3>
+      <p>See a clean, structured breakdown. Print or share it however you like.</p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <span>Parsed</span>
+    <span>No data leaves your browser.</span>
+  </footer>
+
+  <div class="progress-overlay" id="progress-overlay">
+    <div class="progress-spinner"></div>
+    <div class="progress-label" id="progress-label">Reading file…</div>
+  </div>
+
+  <script src="js/extractor.js"></script>
+  <script src="js/parser.js"></script>
+  <script>
+    const dropZone   = document.getElementById("drop-zone");
+    const fileInput  = document.getElementById("file-input");
+    const overlay    = document.getElementById("progress-overlay");
+    const progressLbl = document.getElementById("progress-label");
+
+    function showProgress(msg) {
+      overlay.classList.add("active");
+      progressLbl.textContent = msg;
+    }
+
+    function handleFile(file) {
+      if (!file) return;
+      const ext = file.name.split(".").pop().toLowerCase();
+      if (!["pdf", "txt", "text"].includes(ext)) {
+        alert("Please upload a PDF or text file.");
+        return;
+      }
+      CVParser.processFile(file, showProgress).catch(err => {
+        overlay.classList.remove("active");
+        alert("Could not read the file. Please try again with a different file.\n\n" + err.message);
+        console.error(err);
+      });
+    }
+
+    fileInput.addEventListener("change", () => handleFile(fileInput.files[0]));
+
+    dropZone.addEventListener("dragover", e => {
+      e.preventDefault();
+      dropZone.classList.add("drag-over");
+    });
+    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("drag-over"));
+    dropZone.addEventListener("drop", e => {
+      e.preventDefault();
+      dropZone.classList.remove("drag-over");
+      handleFile(e.dataTransfer.files[0]);
+    });
+  </script>
+</body>
+</html>

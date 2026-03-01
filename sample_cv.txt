@@ -1,0 +1,64 @@
+Emily Carter
+Full Stack Developer
+Austin, TX, USA
+Email: emily.carter@example.com
+Phone: +1 512 408 7731
+LinkedIn: linkedin.com/in/emilycarter
+GitHub: github.com/emilycarter
+Website: https://emilycarter.dev
+
+Professional Summary:
+Results-driven full stack developer with 6 years of experience building scalable web applications and APIs. Strong background in cloud infrastructure, modern JavaScript frameworks, and agile team environments. Passionate about clean code, performance optimization, and developer experience.
+
+Work Experience:
+
+1. Senior Full Stack Engineer, Horizon Labs (2022 – Present)
+   - Architected and led development of a SaaS analytics platform using React, Node.js, and PostgreSQL, serving 50,000+ monthly active users.
+   - Migrated legacy monolith to microservices on AWS (ECS, RDS, S3, CloudFront), reducing infrastructure costs by 35%.
+   - Implemented CI/CD pipelines with GitHub Actions and Terraform, cutting deployment time from 45 minutes to under 8 minutes.
+   - Mentored 4 junior engineers through weekly code reviews and pair programming sessions.
+   - Introduced TypeScript across the frontend codebase, reducing runtime errors by 60%.
+
+2. Software Engineer, BrightPath Technologies (2020 – 2022)
+   - Developed RESTful APIs with Node.js and Express.js, consumed by 3 mobile and web client teams.
+   - Built real-time notification system using Redis pub/sub and WebSockets handling 10,000+ concurrent connections.
+   - Wrote integration and unit tests with Jest and Testing Library, maintaining 90%+ code coverage.
+   - Collaborated with UX designers to implement responsive UI components with React and Sass.
+
+3. Junior Developer, CodeNest Agency (2018 – 2020)
+   - Built client-facing web applications using HTML, CSS, JavaScript, and Vue.
+   - Integrated third-party APIs (Stripe, Twilio, SendGrid) for payment and messaging features.
+   - Maintained MySQL databases and wrote complex SQL queries for reporting dashboards.
+
+Education:
+
+- B.Sc. in Software Engineering, University of Texas at Austin (2014 – 2018)
+  GPA: 3.8 / 4.0 — Dean's List (2016, 2017, 2018)
+
+- AWS re/Start Graduate Program (2019)
+
+Skills:
+JavaScript, TypeScript, Python, React, Next.js, Vue, Node.js, Express.js, HTML5, CSS3, Sass, Redux, GraphQL, REST API, PostgreSQL, MySQL, MongoDB, Redis, AWS, Docker, Kubernetes, Terraform, GitHub Actions, Jest, Cypress, Git, Figma, Agile, Scrum, CI/CD, Microservices, WebSockets
+
+Soft Skills:
+Leadership, Mentoring, Communication, Problem Solving, Analytical Thinking, Time Management, Collaboration, Attention to Detail
+
+Projects:
+
+- OpenMetrics — Open-source lightweight metrics dashboard built with React and InfluxDB. 1.2k GitHub stars.
+- TaskFlow — Personal productivity web app using Next.js, Supabase, and Tailwind CSS. Featured on Product Hunt.
+- QuickDeploy CLI — Node.js CLI tool for zero-config deployment to AWS Lambda. 300+ weekly npm downloads.
+
+Certifications:
+- AWS Certified Developer – Associate (2023)
+- MongoDB Certified Developer (2022)
+- Google UX Design Certificate (2021)
+
+Languages:
+English (Native), Spanish (Intermediate), French (Basic)
+
+Awards & Recognition:
+- "Engineer of the Quarter" — Horizon Labs, Q3 2023
+- Hackathon Winner — ATX Dev Fest 2021 (Best Developer Tool)
+
+References available upon request.
